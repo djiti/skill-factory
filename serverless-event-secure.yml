@@ -1,0 +1,4 @@
+myLambdaEvents:
+  - alexaSkill:
+      appId: ${env:skillId}
+      enabled: true

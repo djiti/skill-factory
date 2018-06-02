@@ -1,0 +1,38 @@
+{
+  "type": "IntentRequest",
+  "requestId": "string",
+  "timestamp": "string",
+  "dialogState": "string",
+  "locale": "string",
+  "intent": {
+    "name": "string",
+    "confirmationStatus": "string",
+    "slots": {
+      "Location": {
+        "name": "getWeatherIntent",
+        "value": "home",
+        "confirmationStatus": "string",
+        "resolutions": {
+          "resolutionsPerAuthority": [
+            {
+              "authority": "string",
+              "status": {
+                "code": "string"
+              },
+              "values": [
+                {
+                  "value": {
+                    "name": "string",
+                    "id": "string"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+
