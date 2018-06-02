@@ -1,0 +1,172 @@
+image: ${CI_REGISTRY}/rey/debian-ci:latest
+
+variables:
+  SERVERLESS_SERVICE_NAME: "alexa-skill-dark-pebble"
+  QA_INVOCATION: "Dark Sky Qa"
+  PROD_INVOCATION: "Dark Sky"
+  AWS_REGION: "us-east-1"
+  KMS_ALIAS: "alias/serverless-${SERVERLESS_SERVICE_NAME}"
+
+stages:
+  - infrastructure
+  - unittest
+  - deploy-to-qa
+  - ui-test-qa
+  - deploy-to-prod
+  - ui-test-prod
+
+before_script:
+  - echo ${CI_JOB_TOKEN} | docker login -u gitlab-ci-token --password-stdin ${CI_REGISTRY}
+  - echo "${GPS_POSITIONS}" > gps_positions.json
+
+cache:
+  key: ${CI_COMMIT_REF_NAME}
+  untracked: true
+  paths:
+    - node_modules
+
+unit-test:
+  stage: unittest
+  script:
+    - npm install
+    - node_modules/.bin/nsp check || /bin/true
+    - python3 -m nose
+
+.cleanup-skills: &cleanup-skills |
+  echo Deleting spurious ${INVOCATION} skills
+  for skillId in $(ask api list-skills | 
+                  jq -r '.skills[] | 
+                          select ((.nameByLocale."en-US"|ascii_downcase) == ("'"${INVOCATION}"'"|ascii_downcase)) | .skillId');
+  do
+    echo Deleting skill ${skillId}
+    ask api delete-skill --skill-id $skillId
+  done
+
+.encrypt-secrets: &encrypt-secrets |
+  echo Encrypt secrets
+  export encDarkSkySecretKey=$(aws kms encrypt --key-id ${KMS_ALIAS} --plaintext "${DARK_SKY_SECRET_KEY}" |
+                                 jq -r '.CiphertextBlob')
+
+.get-kms: &get-kms |
+  echo Creating KMS if needed
+  export awsKmsKeyId=$(aws kms list-aliases |
+                      jq -r '.Aliases[] |
+                              select(.AliasName=="'$KMS_ALIAS'") |
+                              .TargetKeyId')
+  if [[ -z "${awsKmsKeyId}" ]]; then
+    masterKeyId=$(aws kms create-key --description "Master Key for ${SERVERLESS_SERVICE_NAME}"
+                                    --region ${AWS_REGION} |
+                jq -r '.KeyMetadata.KeyId');
+    aws kms create-alias --alias-name "$KMS_ALIAS" --target-key-id $masterKeyId;
+    export awsKmsKeyId=$(aws kms list-aliases |
+                        jq -r '.Aliases[] |
+                                select(.AliasName=="'$KMS_ALIAS'") |
+                                .TargetKeyId');
+  fi
+  export awsKmsKeyArn=$(aws kms list-keys |
+                        jq -r '.Keys[] | select(.KeyId=="'"${awsKmsKeyId}"'") | .KeyArn')
+
+.deploy-skill: &deploy-skill |
+  echo Serverless and ASK
+  export Security="unsecure"
+  npm run deploy:$SERVERLESS_STAGE
+  cd skill
+  export functionArn=$(aws lambda list-functions | 
+                        jq -r '.Functions[] |
+                              select(.FunctionName=="'$SERVERLESS_STAGE'-'$SERVERLESS_SERVICE_NAME'") |
+                              .FunctionArn')
+  echo Identified lambda function as ${functionArn}
+  rm -rf .ask && mkdir .ask
+  jq -n '.deploy_settings.default.was_cloned = false | 
+          .deploy_settings.default.merge.manifest.apis.custom.endpoint.uri = "'$functionArn'"'  > .ask/config
+  cat ../etc/en-US.json | 
+    jq '.interactionModel.languageModel.invocationName=("'"${INVOCATION}"'"|ascii_downcase)' > models/en-US.json
+  cat ../etc/skill.json |
+    jq '.manifest.publishingInformation.locales."en-US".summary="'"${INVOCATION}"'" |
+        .manifest.publishingInformation.locales."en-US".name="'"${INVOCATION}"'"' > skill.json
+
+  ask deploy
+  cd ..
+  export skillId=$(ask api list-skills |
+      jq -r '.skills[] |  select ((.nameByLocale."en-US"|ascii_downcase) == ("'"${INVOCATION}"'"|ascii_downcase)) | .skillId')
+  export Security="secure"
+  npm run deploy:$SERVERLESS_STAGE
+  echo Enabling skill-id=${skillId}
+  ask api enable-skill --skill-id $skillId
+
+deploy-to-qa:
+  stage: deploy-to-qa
+  script:
+    - export INVOCATION="${QA_INVOCATION}"
+    - export SERVERLESS_STAGE="qa"
+    - *cleanup-skills
+    - npm install
+    - *get-kms
+    - *encrypt-secrets
+    - *deploy-skill
+  only:
+    - develop
+  environment:
+    name: qa
+    url: https://developer.amazon.com/alexa/console/ask
+  artifacts:
+    paths:
+      - .serverless
+      - skill
+    expire_in: 2 day
+    when: always
+
+.ask-test: &ask-test |
+  echo Test the skill through ASK
+  skillId=$(ask api list-skills |
+    jq -r '.skills[] | select ((.nameByLocale."en-US"|ascii_downcase) == ("'"${INVOCATION}"'"|ascii_downcase)) | .skillId')
+  export simulation=$(ask simulate -l en-US -s ${skillId} -t "Alexa ask ${INVOCATION}" 2>/dev/null)
+  mkdir -p artifacts
+  echo $simulation > "artifacts/simulation-${INVOCATION}.json"
+  [[ $(echo $simulation | jq '.result.skillExecutionInfo.invocationResponse.body.response.outputSpeech.text' | wc -w) -gt 5 ]]
+
+test-ui-qa:
+  stage: ui-test-qa
+  script:
+    - export INVOCATION="${QA_INVOCATION}"
+    - *ask-test
+  only:
+    - develop
+  artifacts:
+    paths:
+      - artifacts
+    expire_in: 1 month
+
+deploy-to-production:
+  stage: deploy-to-prod
+  script:
+    - export INVOCATION="${PROD_INVOCATION}"
+    - export SERVERLESS_STAGE="prod"
+    - *cleanup-skills
+    - npm install
+    - *get-kms
+    - *encrypt-secrets
+    - *deploy-skill
+  only:
+    - master
+  environment:
+    name: production
+    url: https://developer.amazon.com/alexa/console/ask
+  artifacts:
+    paths:
+      - .serverless
+      - skill
+    expire_in: 2 day
+    when: always
+
+test-ui-prod:
+  stage: ui-test-prod
+  script:
+    - export INVOCATION="${PROD_INVOCATION}"
+    - *ask-test
+  only:
+    - master
+  artifacts:
+    paths:
+      - artifacts
+    expire_in: 1 month

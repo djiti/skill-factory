@@ -1,0 +1,27 @@
+service:
+  name: ${env:SERVERLESS_SERVICE_NAME}
+  awsKmsKeyArn: ${env:awsKmsKeyArn}
+
+provider:
+  name: aws
+  runtime: python3.6
+  stage: qa #Default stage is qa. The other one is prod.
+  region: ${env:AWS_REGION}
+  memorySize: 128
+  cfLogs: true
+  environment:
+    DARK_SKY_SECRET_KEY: ${env:encDarkSkySecretKey}
+
+package:
+  exclude:
+    - ./**
+  include:
+    - lambda_function.py
+    - gps_positions.json
+
+functions:
+  myLambda:
+    handler: lambda_function.lambda_handler
+    name: ${opt:stage}-${env:SERVERLESS_SERVICE_NAME}
+    description: ${env:SERVERLESS_SERVICE_NAME} ${opt:stage} skill
+    events: ${file(serverless-event-${env:Security}.yml):myLambdaEvents}

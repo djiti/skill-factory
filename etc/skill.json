@@ -1,0 +1,15 @@
+{
+  "manifest": {
+    "publishingInformation": {
+      "locales": {
+        "en-US": {
+          "summary": "POPULATED IN THE PIPELINE",
+          "name": "POPULATED IN THE PIPELINE"
+        }
+      },
+      "isAvailableWorldwide": true,
+      "distributionCountries": []
+    },
+    "manifestVersion": "1.0"
+  }
+}

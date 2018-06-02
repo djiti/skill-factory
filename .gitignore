@@ -1,0 +1,6 @@
+*.pyc
+secret*
+.vscode
+gps_positions.json
+node_modules
+.serverless

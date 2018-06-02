@@ -1,0 +1,62 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "POPULATED IN THE PIPELINE",
+      "intents": [
+        {
+          "name": "getWeatherIntent",
+          "slots": [
+            {
+              "name": "Location",
+              "type": "LIST_OF_LOCATIONS"
+            }
+          ],
+          "samples": [
+            "What is the weather like in {Location}",
+            "What's the weather like in {Location}",
+            "Tell me about the weather in {Location}",
+            "How's {Location}",
+            "How is {Location}",
+            "How is the weather at {Location}",
+            "How is the weather in {Location}",
+            "{Location}"
+          ]
+        },
+        {
+          "name": "getHelpIntent",
+          "samples": [
+            "Help",
+            "Help me"
+          ]
+        }
+      ],
+      "types": [
+        {
+          "values": [
+            {
+              "name": {
+                "value": "Home"
+              }
+            },
+            {
+              "name": {
+                "value": "Village School"
+              }
+            },
+            {
+              "name": {
+                "value": "Enclave Parkway"
+              }
+            },
+            {
+              "name": {
+                "value": "Awty"
+              }
+            }
+          ],
+          "name": "LIST_OF_LOCATIONS"
+        }
+      ]
+    }
+  }
+}
