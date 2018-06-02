@@ -1,6 +1,6 @@
 {
   "name": "dark-pebble",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Dark Pebble",
   "author": "Guillaume Tamboise",
   "license": "GPL-3.0-or-later",
@@ -17,5 +17,9 @@
   },
   "devDependencies": {
     "nsp": "^3.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:djiti/skill-factory.git"
   }
 }
