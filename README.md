@@ -1,7 +1,7 @@
 # What is this
 
 This is a factory for Alexa skills.
-Read [this article](https://medium.com/@gtamboise/and-peering-through-the-end-of-the-pipeline-alexa-a462765fcb07) to get some context.
+Read [this article](https://medium.com/@gtamboise/and-peeking-through-the-end-of-the-pipeline-alexa-26e950705c08) to get some context.
 
 
 # Pipeline
