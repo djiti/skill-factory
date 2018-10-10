@@ -79,4 +79,3 @@ Trigger the pipeline again to put everything back.
 
 If ```npm run logs-tail-qa``` or its production counterpart complains of lack of CloudWatch stream,
 **make sure that there is no other active skill defined with the same invocation**.
-
