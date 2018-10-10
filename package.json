@@ -1,6 +1,6 @@
 {
   "name": "dark-pebble",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Dark Pebble",
   "author": "Guillaume Tamboise",
   "license": "GPL-3.0-or-later",
@@ -12,14 +12,9 @@
     "logs-tail-prod": "serverless logs -t -f myLambda -s prod"
   },
   "dependencies": {
-    "alexa-sdk": "^1.0.25",
-    "serverless": "^1.27.3"
+    "ask-sdk": "^2.1.0",
+    "serverless": "^1.32.0"
   },
   "devDependencies": {
-    "nsp": "^3.2.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:djiti/skill-factory.git"
   }
 }

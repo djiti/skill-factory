@@ -29,7 +29,7 @@ unit-test:
   stage: unittest
   script:
     - npm install
-    - node_modules/.bin/nsp check || /bin/true
+    - npm audit
     - python3 -m nose
 
 .cleanup-skills: &cleanup-skills |
