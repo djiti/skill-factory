@@ -16,5 +16,9 @@
     "serverless": "^1.32.0"
   },
   "devDependencies": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:djiti/skill-factory.git"
   }
 }
