@@ -12,8 +12,8 @@
     "logs-tail-prod": "serverless logs -t -f myLambda -s prod"
   },
   "dependencies": {
-    "alexa-sdk": "^1.0.25",
-    "serverless": "^1.27.3"
+    "ask-sdk": "^2.1.0",
+    "serverless": "^1.32.0"
   },
   "devDependencies": {
     "nsp": "^3.2.1"
