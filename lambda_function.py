@@ -136,7 +136,7 @@ def get_temperature(full_forecast):
     forecast = (
         'Current temperature is {current_temp} degrees Celsius, '
         'with a low of {low_temp} {low_temp_time} '
-        'and a high of {high_temp} {high_temp_time}.')\
+        'and a high of {high_temp} {high_temp_time}. ')\
         .format(current_temp=degrees_f_to_c(full_forecast['currently']['temperature']),
                 low_temp=degrees_f_to_c(today_forecast['temperatureMin']),
                 low_temp_time=fuzzy_time(int(unix_to_time(today_forecast['temperatureMinTime'],
@@ -201,9 +201,9 @@ def get_weather_in_session(intent, session):
                                                    get_full_forecast(GPS_POSITIONS[location]))
             weather = 'At {}, {}'.format(location, get_weather(full_forecast))
         else:
-            weather = 'Oops, somebody forgot to tell me where {} is located'.format(location)
+            weather = 'Oops, somebody forgot to tell me where {} is located. '.format(location)
     else:
-        weather = 'I do not know the location you asked about.'
+        weather = 'I do not know the location you asked about. '
     session_attributes['forecast'] = full_forecast
     return build_response(session_attributes, build_speechlet_response(
         card_title, weather, reprompt_text, should_end_session))
@@ -218,7 +218,7 @@ def get_help_in_session():
     positions = sorted(GPS_POSITIONS.keys())
     all_positions = ', '.join(positions[0:len(positions) - 1])
     all_positions = '{}, and {}'.format(all_positions, positions[-1])
-    text = 'You can ask me for the weather in {}'.format(all_positions)
+    text = 'You can ask me for the weather in {}. '.format(all_positions)
     return build_response(session_attributes, build_speechlet_response(
         card_title, text, reprompt_text, should_end_session))
 
