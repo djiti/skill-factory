@@ -42,7 +42,7 @@ class Test(unittest.TestCase):
     def test_get_temperature(self):
         response = lambda_function.get_temperature(self.full_forecast)
         self.assertEqual(response, "Current temperature is 15 degrees Celsius, "
-                                   "with a low of 10 tonight and a high of 26 mid day.")
+                                   "with a low of 10 tonight and a high of 26 mid day. ")
 
     def test_get_alert_gives_alerts_when_there_is_1(self):
         response = lambda_function.get_alert({"alerts": [{"title": "Hard Freeze Warning"}]})
