@@ -117,6 +117,7 @@ deploy-to-qa:
     when: always
 
 .ask-test: &ask-test |
+  set -x
   echo Test the skill through ASK
   skillId=$(ask api list-skills |
     jq -r '.skills[] | select ((.nameByLocale."en-US"|ascii_downcase) == ("'"${INVOCATION}"'"|ascii_downcase)) | .skillId')
