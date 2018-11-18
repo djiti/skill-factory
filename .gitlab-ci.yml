@@ -137,6 +137,7 @@ test-ui-qa:
     paths:
       - artifacts
     expire_in: 1 month
+    when: always
 
 deploy-to-production:
   stage: deploy-to-prod
@@ -171,3 +172,4 @@ test-ui-prod:
     paths:
       - artifacts
     expire_in: 1 month
+    when: always
