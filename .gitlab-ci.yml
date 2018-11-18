@@ -121,7 +121,7 @@ deploy-to-qa:
   echo Test the skill through ASK
   skillId=$(ask api list-skills |
     jq -r '.skills[] | select ((.nameByLocale."en-US"|ascii_downcase) == ("'"${INVOCATION}"'"|ascii_downcase)) | .skillId')
-  export simulation=$(ask simulate -l en-US -s ${skillId} -t "Alexa ask ${INVOCATION}" 2>/dev/null)
+  export simulation=$(ask simulate -l en-US -s ${skillId} -t "Alexa ask ${INVOCATION}" 2>/dev/null | grep -A 99999999 '{')
   mkdir -p artifacts
   echo $simulation > "artifacts/simulation-${INVOCATION}.json"
   [[ $(echo $simulation | jq '.result.skillExecutionInfo.invocationResponse.body.response.outputSpeech.text' | wc -w) -gt 5 ]]
