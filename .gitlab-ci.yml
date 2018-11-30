@@ -99,8 +99,8 @@ deploy-to-qa:
   script:
     - export INVOCATION="${QA_INVOCATION}"
     - export SERVERLESS_STAGE="qa"
-    - *cleanup-skills
     - npm install
+    - *cleanup-skills
     - *get-kms
     - *encrypt-secrets
     - *deploy-skill
@@ -142,8 +142,8 @@ deploy-to-production:
   script:
     - export INVOCATION="${PROD_INVOCATION}"
     - export SERVERLESS_STAGE="prod"
-    - *cleanup-skills
     - npm install
+    - *cleanup-skills
     - *get-kms
     - *encrypt-secrets
     - *deploy-skill
