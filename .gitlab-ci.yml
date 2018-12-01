@@ -1,4 +1,4 @@
-image: ${CI_REGISTRY}/rey/debian-ci:latest
+image: ${CI_REGISTRY}/rey/debian-ci:${DEBIAN_CI_VERSION}
 
 variables:
   SERVERLESS_SERVICE_NAME: "alexa-skill-dark-pebble"
@@ -99,8 +99,8 @@ deploy-to-qa:
   script:
     - export INVOCATION="${QA_INVOCATION}"
     - export SERVERLESS_STAGE="qa"
-    - *cleanup-skills
     - npm install
+    - *cleanup-skills
     - *get-kms
     - *encrypt-secrets
     - *deploy-skill
@@ -144,8 +144,8 @@ deploy-to-production:
   script:
     - export INVOCATION="${PROD_INVOCATION}"
     - export SERVERLESS_STAGE="prod"
-    - *cleanup-skills
     - npm install
+    - *cleanup-skills
     - *get-kms
     - *encrypt-secrets
     - *deploy-skill
