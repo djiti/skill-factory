@@ -1,4 +1,4 @@
-image: ${CI_REGISTRY}/rey/debian-ci:latest
+image: ${CI_REGISTRY}/rey/debian-ci:${DEBIAN_CI_VERSION}
 
 variables:
   SERVERLESS_SERVICE_NAME: "alexa-skill-dark-pebble"
