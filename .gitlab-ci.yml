@@ -71,7 +71,8 @@ unit-test:
   export Security="unsecure"
   npm run deploy:$SERVERLESS_STAGE
   cd skill
-  export functionArn=$(aws lambda list-functions | 
+  export functionArn=$(aws lambda list-functions |
+                       tee aws_lambda_list-functions.json |
                         jq -r '.Functions[] |
                               select(.FunctionName=="'$SERVERLESS_STAGE'-'$SERVERLESS_SERVICE_NAME'") |
                               .FunctionArn')
@@ -113,6 +114,7 @@ deploy-to-qa:
     paths:
       - .serverless
       - skill
+      - aws_lambda_list-functions.json
     expire_in: 2 day
     when: always
 
@@ -159,6 +161,7 @@ deploy-to-production:
     paths:
       - .serverless
       - skill
+      - aws_lambda_list-functions.json
     expire_in: 2 day
     when: always
 
