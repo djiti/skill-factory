@@ -1,5 +1,6 @@
 FROM debian:stretch
-ENV COMPOSE_VERSION 1.19.0
+ENV COMPOSE_VERSION 1.22.0
+ENV NPM_VERSION 10
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
@@ -8,12 +9,12 @@ COPY ca-certificates /usr/local/share/ca-certificates/
 
 # Get Python and Docker
 RUN apt-get update -qy \
-    && apt-get dist-upgrade -qy \
     && apt-get install -qy \
       apt-transport-https \
       bash-completion \
       ca-certificates \
       curl \
+      git \
       gnupg2 \
       groff-base \
       httpie \
@@ -42,7 +43,7 @@ RUN apt-get update -qy \
 	  && chmod +x /usr/local/bin/docker-compose
 
 # Get node and npm
-RUN curl -sL https://deb.nodesource.com/setup_9.x | bash - \
+RUN curl -sL https://deb.nodesource.com/setup_${NPM_VERSION}.x | bash - \
     && apt-get -qy install --no-install-recommends nodejs \
     && useradd -ms /bin/bash user \
     && adduser user docker
@@ -58,7 +59,7 @@ RUN curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "/tmp/awscli-bu
 # Get ASK
 USER user
 RUN cd /home/user \
-    && echo '{}' > package.json \
-    && npm install ask-cli
+    && npm init -y \
+    && npm install ask-cli@1.4
 
 ENV PATH="/home/user/node_modules/.bin:${PATH}"
