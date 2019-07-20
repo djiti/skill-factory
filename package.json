@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "ask-sdk": "^2.3.0",
-    "serverless": "^1.41.0"
+    "serverless": "^1.47.0"
   },
   "devDependencies": {},
   "repository": {
