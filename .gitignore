@@ -4,3 +4,6 @@ secret*
 gps_positions.json
 node_modules
 .serverless
+
+# Apple junk
+.AppleDouble/
