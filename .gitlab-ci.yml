@@ -135,6 +135,8 @@ test-ui-qa:
   script:
     - export INVOCATION="${QA_INVOCATION}"
     - export SERVERLESS_STAGE="qa"
+    - *get-kms
+    - *encrypt-secrets
     - *ask-test
   only:
     - develop
@@ -172,6 +174,8 @@ test-ui-prod:
   script:
     - export INVOCATION="${PROD_INVOCATION}"
     - export SERVERLESS_STAGE="prod"
+    - *get-kms
+    - *encrypt-secrets
     - *ask-test
   only:
     - master
