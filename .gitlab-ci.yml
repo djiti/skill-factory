@@ -134,6 +134,7 @@ test-ui-qa:
   stage: ui-test-qa
   script:
     - export INVOCATION="${QA_INVOCATION}"
+    - export SERVERLESS_STAGE="qa"
     - *ask-test
   only:
     - develop
@@ -170,6 +171,7 @@ test-ui-prod:
   stage: ui-test-prod
   script:
     - export INVOCATION="${PROD_INVOCATION}"
+    - export SERVERLESS_STAGE="prod"
     - *ask-test
   only:
     - master
