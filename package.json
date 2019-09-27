@@ -8,8 +8,8 @@
     "deploy:qa": "serverless deploy -s qa",
     "deploy:prod": "serverless deploy -s prod",
     "deploy:info": "serverless info -v",
-    "logs-tail-qa": "serverless logs -t -f myLambda -s qa",
-    "logs-tail-prod": "serverless logs -t -f myLambda -s prod"
+    "logs-tail-qa": "serverless logs -f myLambda -s qa",
+    "logs-tail-prod": "serverless logs -f myLambda -s prod"
   },
   "dependencies": {
     "ask-sdk": "^2.3.0",
