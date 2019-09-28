@@ -127,7 +127,7 @@ deploy-to-qa:
   simulation=$(ask api get-simulation -i ${simulationId} -s ${skillId})
   mkdir -p artifacts
   echo $simulation > "artifacts/simulation-${INVOCATION}.json"
-  npm run logs-tail-${SERVERLESS_STAGE} > "artifacts/simulation-${INVOCATION}.log"
+  #npm run logs-tail-${SERVERLESS_STAGE} > "artifacts/simulation-${INVOCATION}.log"
   [[ $(echo $simulation | jq '.result.skillExecutionInfo.invocationResponse.body.response.outputSpeech.text' | wc -w) -gt 5 ]]
 
 test-ui-qa:
