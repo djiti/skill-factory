@@ -122,7 +122,7 @@ deploy-to-qa:
   echo Test the skill through ASK
   skillId=$(ask api list-skills |
     jq -r '.skills[] | select ((.nameByLocale."en-US"|ascii_downcase) == ("'"${INVOCATION}"'"|ascii_downcase)) | .skillId')
-  simulationId=$(ask simulate -l en-US -s ${skillId} -t "ask ${INVOCATION}" 2>&1 | strings | sed -n -e 's/Simulation created for simulation id: \([-0-9a-zA-Z]*\)$/\1/p')
+  simulationId=$(ask simulate -l en-US -s ${skillId} -t "open ${INVOCATION}" 2>&1 | strings | sed -n -e 's/Simulation created for simulation id: \([-0-9a-zA-Z]*\)$/\1/p')
   echo simulationId is ${simulationId}
   simulation=$(ask api get-simulation -i ${simulationId} -s ${skillId})
   mkdir -p artifacts
