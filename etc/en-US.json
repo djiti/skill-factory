@@ -28,6 +28,10 @@
             "Help",
             "Help me"
           ]
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
         }
       ],
       "types": [
